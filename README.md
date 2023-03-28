@@ -2,7 +2,7 @@
 
 [![validate](https://github.com/ImperialOps/gitops/workflows/validate/badge.svg)](https://github.com/ImperialOps/gitops/actions)
 
-This repository contains the Kubernetes manifests for applications deployed using GitOps principles with FluxCD. It uses Kustomize to minimize duplication.
+This repository contains the Kubernetes manifests for applications deployed using GitOps principles with FluxCD. It uses Kustomize and Helm to minimize duplication.
 
 ## Repository Structure
 
