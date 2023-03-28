@@ -10,8 +10,10 @@ The repository is structured as follows:
 
 ```text
 ├── apps
-│   └── base
-│       └── airgap-webhook
+│   ├── base
+│   │   └── airgap-webhook
+│   ├── demo
+│   └── production
 ├── clusters
 │   └── demo
 └── infrastructure
@@ -47,3 +49,7 @@ The clusters is structured into:
 
 FluxCD is used to continuously deploy the application based on the configuration stored in this Git repository.
 Install FluxCD into your Kubernetes cluster. This can be done using the instructions in the FluxCD documentation or use Terraform as shown in [ImperialOps/terraform-k8s-fluxcd](https://github.com/ImperialOps/terraform-aws-eks). NOTE TODO
+
+## Credits
+
+OG Boss [Stefan Prodan](https://github.com/stefanprodan) deserves all the credits with the [flux2-kustomize-helm-example](https://github.com/fluxcd/flux2-kustomize-helm-example) repository.
