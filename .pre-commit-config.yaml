@@ -1,0 +1,13 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+  - repo: local
+    hooks:
+      - id: validate-sh
+        name: validate
+        entry: ./scripts/validate.sh
+        language: script
+        pass_filenames: false
