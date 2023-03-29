@@ -15,12 +15,15 @@ The repository is structured as follows:
 │   ├── demo
 │   └── production
 ├── clusters
-│   └── demo
+│   ├── dev
+│   └── kind
+│       └── flux-system
 └── infrastructure
-    ├── configs
-    └── controllers
-        ├── opensearch
-        └── prometheus
+    ├── base
+    ├── dev
+    │   ├── configs
+    │   └── controllers
+    └── kind
 ```
 
 ### Applications
@@ -28,27 +31,41 @@ The repository is structured as follows:
 The apps configuration is structured into:
 
 - **apps/base/** dir contains namespaces and Helm release definitions
-- **apps/production/** dir contains the production Helm release values
-- **apps/demo/** dir contains the demo values
+- **apps/kind/** dir contains the dev values for local development & testing
+- **apps/dev/** dir contains the dev values for larger clusters
 
 ### Infrastructure
 
 The infrastructure is structured into:
 
-- **infrastructure/controllers/** dir contains namespaces and Helm release definitions for Kubernetes controllers
-- **infrastructure/configs/** dir contains Kubernetes custom resources such as cert issuers and networks policies
+- **infrastructure/base/** dir contains namespaces and Helm release definitions for all clusters
+- **infrastructure/kind/** dir contains Kubernetes custom resources such as nginx ingress
+- **infrastructure/dev/** dir contains Kubernetes custom resources such as cert issuers and service mesh
 
 ### Clusters
 
 The clusters is structured into:
 
-- **clusters/production/** dir contains the Flux Kustomization definitions to bootstrap the cluster
-- **clusters/demo/** dir contains the Flux Kustomization definitions to bootstrap the cluster
+- **clusters/dev/** dir contains the Flux Kustomization definitions to bootstrap the cluster
+- **clusters/kind/** dir contains the Flux Kustomization definitions to bootstrap the cluster
 
 ## Deployment
 
-FluxCD is used to continuously deploy the application based on the configuration stored in this Git repository.
-Install FluxCD into your Kubernetes cluster. This can be done using the instructions in the FluxCD documentation or use Terraform as shown in [ImperialOps/terraform-k8s-fluxcd](https://github.com/ImperialOps/terraform-aws-eks). NOTE TODO
+```bash
+# kind cluster with host ports
+# config source: https://kind.sigs.k8s.io/docs/user/ingress/
+kind create cluster --name flux --config kind.yaml
+
+# fork repo and export creds
+export GITHUB_TOKEN=<your-token>
+export GITHUB_USER=<your-username>
+
+# bootstrap cluster
+flux bootstrap github --owner=$GITHUB_USER --repository=<your-repo> --branch=main --path=./clusters/kind --personal
+
+# watch sync
+flux get kustomizations --watch
+```
 
 ## Credits
 
