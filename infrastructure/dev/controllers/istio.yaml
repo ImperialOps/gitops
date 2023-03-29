@@ -6,6 +6,29 @@ metadata:
   labels:
     toolkit.fluxcd.io/tenant: sre-team
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-ingress
+  labels:
+    toolkit.fluxcd.io/tenant: sre-team
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-egress
+  labels:
+    toolkit.fluxcd.io/tenant: sre-team
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: istio
+  namespace: helm
+spec:
+  interval: 24h
+  url: https://istio-release.storage.googleapis.com/charts
+---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -40,13 +63,6 @@ spec:
         namespace: helm
       interval: 12h
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: istio-ingress
-  labels:
-    toolkit.fluxcd.io/tenant: sre-team
----
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -70,14 +86,7 @@ kind: IngressClass
 metadata:
   name: istio
 spec:
-  controller: istio.io/istio-ingressgateway
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: istio-egress
-  labels:
-    toolkit.fluxcd.io/tenant: sre-team
+  controller: istio.io/ingress-controller
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
