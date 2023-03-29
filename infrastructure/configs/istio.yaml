@@ -1,0 +1,17 @@
+---
+# Responds to http01 challenges globally for us
+# Not to be used by any applications.
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: global-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
