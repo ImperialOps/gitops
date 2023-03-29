@@ -3,3 +3,13 @@ kind: Kustomization
 resources:
   - ../base
   - ingress-nginx.yaml
+
+patches:
+  - patch: |
+      - op: add
+        path: /spec/values/extraArgs
+        value:
+          - --kubelet-insecure-tls=true
+    target:
+      kind: HelmRelease
+      name: metrics-server
