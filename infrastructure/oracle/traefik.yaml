@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: traefik
+  labels:
+    toolkit.fluxcd.io/tenant: sre-team
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: traefik
+  namespace: helm
+spec:
+  interval: 24h
+  url: https://traefik.github.io/charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: traefik
+      version: "x"
+      sourceRef:
+        kind: HelmRepository
+        name: traefik
+        namespace: helm
+      interval: 12h
+  values:
+    persistence:
+      enabled: true
+    certResolvers:
+      letsencrypt:
+        # for challenge options cf. https://doc.traefik.io/traefik/https/acme/
+        email: josh.bowen@stuxcd.io
+        dnsChallenge:
+          # also add the provider's required configuration under env
+          # or expand then from secrets/configmaps with envfrom
+          # cf. https://doc.traefik.io/traefik/https/acme/#providers
+          provider: gcloud
+          # add futher options for the dns challenge as needed
+          # cf. https://doc.traefik.io/traefik/https/acme/#dnschallenge
+          delayBeforeCheck: 30
+          resolvers:
+            - 1.1.1.1
+            - 8.8.8.8
+        tlsChallenge: true
+        httpChallenge:
+          entryPoint: "web"
+        # It has to match the path with a persistent volume
+        storage: /data/acme.json

@@ -27,3 +27,10 @@ spec:
   values:
     apiService:
       create: true
+    resources:
+      limits: {}
+      #  cpu: 250m
+      #  memory: 256Mi
+      requests: {}
+      #  cpu: 250m
+      #  memory: 256Mi
